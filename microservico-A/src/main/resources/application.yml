@@ -1,0 +1,20 @@
+server:
+  port: 3001
+credentials:
+  email: 
+  password:
+mail:
+  smtp:
+    auth: true
+    host: smtp.gmail.com
+    port: 587
+    starttlsEnable: true
+api:
+  googlemaps:
+rabbitmq:
+  username:
+  virtualhost:
+  password:
+  url: bunny.cloudamqp.com
+  queue:
+  exchange:
