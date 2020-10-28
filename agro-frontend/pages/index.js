@@ -58,6 +58,11 @@ export default function Home() {
           </Form.Group>
 
           <Form.Group>
+            <Form.Label>Email de notificação: (Opcional)</Form.Label>
+            <Form.Control type="text" name="email" ref={register({ required: false })}></Form.Control>
+          </Form.Group>
+
+          <Form.Group>
             <Form.Label>Latitude:</Form.Label>
             <Form.Control type="number" name="latitude" ref={register({ required: true, validate: value => (value >= -90 && value <= 90) || "Latitude inválida" })}></Form.Control>
             <div className="invalid-message">{errors.latitude && errors.latitude.message}</div>
