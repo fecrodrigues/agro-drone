@@ -1,5 +1,6 @@
 package br.com.fiap.localizadrone.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,8 @@ public class DroneController {
 	public DroneController(DroneService droneService) {
 		this.droneService = droneService;
 	}
-	
+
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping(value = "/locale")
 	public String getLocale() {
 		return droneService.getLocale();

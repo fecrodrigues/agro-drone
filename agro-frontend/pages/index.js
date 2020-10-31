@@ -5,14 +5,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Form, Button, Row } from 'react-bootstrap';
+import { Form, Button, Row, Container } from 'react-bootstrap';
 
 export default function Home() {
 
   const [ rastreamentoAtivo, setRastreamentoAtivo ] = useState(false);
   const [ temperatura, setTemperatura ] = useState(7);
   const [ umidade, setUmidade ] = useState(50);
-  const [ callInterval, setCallInterval ] = useState()
+  const [ callInterval, setCallInterval ] = useState();
+  const [ droneLocationMap, setDroneLocationMap ] = useState();
 
   const { register, handleSubmit, errors } = useForm();
 
@@ -28,7 +29,7 @@ export default function Home() {
   };
 
   const rastrearDrone = () => {
-    setRastreamentoAtivo(!rastreamentoAtivo);
+    setRastreamentoAtivo(!rastreamentoAtivo);   
   }
 
   useEffect(() => {
@@ -37,64 +38,81 @@ export default function Home() {
       setCallInterval(undefined);
     }
 
-    let interval = setInterval(() => handleSubmit(onSubmit)(rastreamentoAtivo), 10000);
+    let interval = setInterval(() => {
+      handleSubmit(onSubmit)(rastreamentoAtivo); 
+      let iframe = document.getElementById('iframe');
+      
+      if(iframe) {
+        iframe.src = iframe.src
+      }
+      
+    }, 10000);
+
     setCallInterval(interval)
   }, [rastreamentoAtivo])
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Agro Drone</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <Row>
+        <main style={{ padding: '70px' }} className="col-md-5 col-sm-12">
+          
+          <form onSubmit={handleSubmit(onSubmit)}>
+            
+            <Form.Group>
+              <Form.Label>ID Drone:</Form.Label>
+              <Form.Control type="text" name="drone_id" ref={register({ required: true })}></Form.Control>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Email de notificação: (Opcional)</Form.Label>
+              <Form.Control type="text" name="email" ref={register({ required: false })}></Form.Control>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Latitude:</Form.Label>
+              <Form.Control type="number" name="latitude" ref={register({ required: true, validate: value => (value >= -90 && value <= 90) || "Latitude inválida" })}></Form.Control>
+              <div className="invalid-message">{errors.latitude && errors.latitude.message}</div>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Longitude:</Form.Label>
+              <Form.Control type="number" name="longitude" ref={register({ required: true, validate: value => (value >= -180 && value <= 180) || "Longitude inválida" })}></Form.Control>
+              <div className="invalid-message">{errors.longitude && errors.longitude.message}</div>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Temperatura (-25º a 40º):</Form.Label>
+              <Form.Control onChange={(e) => setTemperatura(e.target.value)} type="range" min="-25" max="40" defaultValue="7" name="temperatura" ref={register({ required: true })}></Form.Control> 
+              <Form.Text className="text-muted">Temperatura Selecionada: {temperatura}º</Form.Text>
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Umidade do Ar (0% a 100%):</Form.Label>
+              <Form.Control onChange={(e) => setUmidade(e.target.value)} type="range" min="0" max="100" name="umidade" defaultValue="50" ref={register({ required: true })}></Form.Control>
+              <Form.Text className="text-muted">Umidade Selecionada: {umidade}%</Form.Text>
+            </Form.Group>
+
+            {/*<Button className="btn btn-primary btn-block" type="submit">Enviar dados</Button>*/}
+            
+            <br/>
+            { !rastreamentoAtivo && <Button onClick={rastrearDrone} variant="success" block type="button">Ativar Rastreamento</Button> }
+            { rastreamentoAtivo && <Button onClick={rastrearDrone} variant="danger" block type="button">Destivar Rastreamento</Button> }
+
+          </form>
         
-        <form onSubmit={handleSubmit(onSubmit)}>
-          
-          <Form.Group>
-            <Form.Label>ID Drone:</Form.Label>
-            <Form.Control type="text" name="drone_id" ref={register({ required: true })}></Form.Control>
-          </Form.Group>
+        </main>
 
-          <Form.Group>
-            <Form.Label>Email de notificação: (Opcional)</Form.Label>
-            <Form.Control type="text" name="email" ref={register({ required: false })}></Form.Control>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Latitude:</Form.Label>
-            <Form.Control type="number" name="latitude" ref={register({ required: true, validate: value => (value >= -90 && value <= 90) || "Latitude inválida" })}></Form.Control>
-            <div className="invalid-message">{errors.latitude && errors.latitude.message}</div>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Longitude:</Form.Label>
-            <Form.Control type="number" name="longitude" ref={register({ required: true, validate: value => (value >= -180 && value <= 180) || "Longitude inválida" })}></Form.Control>
-            <div className="invalid-message">{errors.longitude && errors.longitude.message}</div>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Temperatura (-25º a 40º):</Form.Label>
-            <Form.Control onChange={(e) => setTemperatura(e.target.value)} type="range" min="-25" max="40" defaultValue="7" name="temperatura" ref={register({ required: true })}></Form.Control> 
-            <Form.Text className="text-muted">Temperatura Selecionada: {temperatura}º</Form.Text>
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>Umidade do Ar (0% a 100%):</Form.Label>
-            <Form.Control onChange={(e) => setUmidade(e.target.value)} type="range" min="0" max="100" name="umidade" defaultValue="50" ref={register({ required: true })}></Form.Control>
-            <Form.Text className="text-muted">Umidade Selecionada: {umidade}%</Form.Text>
-          </Form.Group>
-
-          {/*<Button className="btn btn-primary btn-block" type="submit">Enviar dados</Button>*/}
-          
-          <br/>
-          { !rastreamentoAtivo && <Button onClick={rastrearDrone} variant="success" block type="button">Ativar Rastreamento</Button> }
-          { rastreamentoAtivo && <Button onClick={rastrearDrone} variant="danger" block type="button">Destivar Rastreamento</Button> }
-          
-        </form>
-       
-      </main>
+        <main style={{ padding: '64px' }} className="col-md-7 col-sm-12">
+          {rastreamentoAtivo? (<iframe id="iframe" style={{height: '100%' }} className="col-md-12" src="http://localhost:8080/drone/locale"></iframe>)
+          :
+          (<p style={{ textAlign: 'center' }}>Rastreamento desligado</p>)}
+        </main>
+      </Row>
 
       <footer className={styles.footer}>
         Sistema de monitoramento por drone.

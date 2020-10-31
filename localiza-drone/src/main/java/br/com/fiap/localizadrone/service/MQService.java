@@ -27,19 +27,19 @@ public class MQService {
 		this.geocodeConfig = geocodeConfig;
 	}
 	
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = 10000)
 	public void updateLocale() {
 		LOOGER.info("Verificando fila a procura de novas mensagens");
 		
 		try {
 	        RabbitTemplate template = new RabbitTemplate(MQConfig.getConnection());
-	        byte[] body = template.receive("drone.locale").getBody();
+	        byte[] body = template.receive("drone.locationInfo").getBody();
 	        System.out.println(new String(body));
 	        
 	        MQResponse mqResponse = new ObjectMapper().readValue(body, MQResponse.class);
 	        
-	        geocodeConfig.setLat(mqResponse.getLat());
-	        geocodeConfig.setLng(mqResponse.getLng());
+	        geocodeConfig.setLat(mqResponse.getLatitude());
+	        geocodeConfig.setLng(mqResponse.getLongitude());
 	        
 	        droneService.getLocale();
 			
@@ -47,7 +47,7 @@ public class MQService {
 	    } catch (NullPointerException ex){
 			LOOGER.info("Fila vazia");
 	    }catch (Exception e){
-			LOOGER.info("Erro ao resgatar mensagem da fila");
+			LOOGER.info("Erro ao resgatar mensagem da fila. Error = " + e.getMessage());
 	    }
 	}
 }
