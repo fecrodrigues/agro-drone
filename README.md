@@ -34,4 +34,15 @@ Para iniciar o projeto são necessários alguns passos:
 - Ambas as queues somente serão alimentadas se todas as informações do formulario forem preenchidas (ID Drone, Latitude, Longitude) e válidas (latitude, longitude);
 - A queue drone.allinfo será alimentada de 10 em 10 segundos;
 - A queue drone.locationInfo será alimentada somente se o botão de ativar rastreamento for ativado sendo o intervalo de 10 em 10 segundos;
-    
+
+
+## Backend (pasta localiza-drone)
+
+   O **localiza-done** é um microsserviço responsável pela exibição da localização do drone de maneira visual no mapa. Através de um serviço node(agro-drone), quando a opção de ratreamento está ativada, ocorre o envio de mensagens para a fila  **drone.locationInfo** (RabbitMQ) que são consumidas permitindo a construção dinâmica do mapa.
+   
+### Inicialização   
+  A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **LocalizaDroneApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento da propriedade **google.key** a fim de a aplicação conseguir autenticar no serviço de mapas do google. 
+  O mapa possúi uma coordenada padrão para que seja renderizado pela primeira vez que é recuperada das propriedades **drone.lat** e **drone.lng**. Dessa forma, caso haja a necessidade de alteração das coordenadas de inicialização basta apenas alterar seus valores no arquivo **applications.properties** localizada a pasta resource do projeto.  
+  
+### Documentação
+  As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger() configurado no projeto.
