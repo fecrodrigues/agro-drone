@@ -1,22 +1,22 @@
 server:
   port: 3001
 credentials:
-  email:
-  password:
+  email: mywheatherdrone@gmail.com
+  password: gnahinymuopefojt
 mail:
   smtp:
     auth: true
     host: smtp.gmail.com
     port: 587
     starttlsEnable: true
-    emailDestination:
+    emailDestination: sheldongomess@hotmail.com
     attachPath: /var/tmp/test.png
 api:
-  googlemaps:
+  googlemaps: AIzaSyDZVvJGiZpyW8JBB1NVJc7aW0lrbfTdx9o
 rabbitmq:
-  username:
-  virtualhost:
-  password: 
+  username: mwjkmatq
+  virtualhost: mwjkmatq
+  password: fDcDrC2TnZ5Ll6OFb-Bbwt4AdnOVQ5Yr
   url: bunny.cloudamqp.com
   queue: drone.allinfo
   exchange: exchange.drone

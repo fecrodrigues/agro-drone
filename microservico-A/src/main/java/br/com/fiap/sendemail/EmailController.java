@@ -34,38 +34,21 @@ public class EmailController {
     @Autowired
     private static RabbitMq rabbitMq;
 
-
-
-    /*    @PostMapping("/email")
-        public ResponseEntity createEmail(@RequestBody EmailContent newEmail) throws IOException, MessagingException {
-            try {
-                String googleUrl = googleApiUrl(newEmail.getLatitude(), newEmail.getLongitude(), googleMaps.getGooglemaps());
-                System.out.println(googleUrl);
-                saveImage(googleUrl, "/var/tmp/test.png");
-                sendmail(newEmail);
-                return new ResponseEntity("Email sent with success!", HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity("Sorry, the email wasn`t sent.", HttpStatus.SERVICE_UNAVAILABLE);
-            }
-        }*/
     @Scheduled(fixedDelay = 60)
-    public void teste() {
+    public void rabbitMqService() {
         RabbitTemplate template = new RabbitTemplate(RabbitConfiguration.getConnection());
         ArrayList<EmailContent> droneData = new ArrayList();
         int i;
         for (i = 0; i < 6; i++ ) {
 
-            /*while (true) {*/
                 try {
 
                     byte[] body = template.receive("drone.allinfo").getBody();
 
                     EmailContent emailContent = new ObjectMapper().readValue(body, EmailContent.class);
-
                     droneData.add(emailContent);
-                    /*System.out.println(droneData);*/
-                    for (EmailContent teste : droneData) System.out.println(teste);
-                    /*droneData.forEach(u -> System.out.println(u.getDrone_id()));*/
+
+                    for (EmailContent values : droneData) System.out.println(values);
                     System.out.println("fim");
                     Thread.sleep(10000);
 
@@ -99,24 +82,6 @@ public class EmailController {
                             System.out.println("Sistema Normal");
                         }
                     } else {}
-
-
-
-
-                    /*System.out.println(new String(body) + "Message number" + i);
-                    System.out.println("Temperatura:" + emailContent.getTemperatura());
-                    if (Integer.parseInt(emailContent.getTemperatura()) >= 35 || Integer.parseInt(emailContent.getTemperatura()) <= 0 ) {
-                        System.out.println("Precisamos mandar um e-mail: Temperatura no range de alerta");
-                    } else if (Integer.parseInt(emailContent.getUmidade()) <= 15) {
-                        System.out.println("Precisamos mandar um e-mail: Umidade no range de alerta");
-                    } else {
-                        System.out.println("Sistema sob controle");
-                    }*/
-
-                    /*String googleUrl = googleApiUrl(emailContent.getLatitude(), emailContent.getLongitude(), googleMaps.getGooglemaps());
-                    System.out.println(googleUrl);
-                    saveImage(googleUrl, "/var/tmp/test.png");
-                    sendmail(emailContent);*/
 
 
                 } catch (NullPointerException | IOException | InterruptedException | MessagingException ex) {
