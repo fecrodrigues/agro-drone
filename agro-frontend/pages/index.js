@@ -114,9 +114,9 @@ export default function Home() {
         </main>
       </Row>
 
-      <footer className={styles.footer}>
+      {/*<footer className={styles.footer}>
         Sistema de monitoramento por drone.
-      </footer>
+       </footer>*/}
     </div>
   )
 }
