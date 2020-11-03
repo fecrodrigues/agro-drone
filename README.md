@@ -2,6 +2,22 @@
 
 Criado projeto simulando um drone enviando informações para duas filas SaaS (Criadas em https://www.cloudamqp.com/) com informações de latitude, longitude, umidade e temperatura.
 
+## Justificativas da composição do projeto
+
+As linguagens escolhidas para o desenvolvimento foram: Javascript React(front-end) & Java (back-end).
+Foram criadas as duas filas abaixo no Rabbit MQ:
+
+- drone.allinfo: fila alimentada pelo front-end para o consumo do microserviço A responsável pelo envio de alertas por e-mail;
+- drone.locationInfo: fila alimentada pelo front-end somente quando a opção de rastreamento está ativa e consumida pelo microserviço B responsável pelo rastreamento.
+
+Foi utilizada a estrategia direct exchange na fila Rabbit MQ para o envio das mensagens entre o front e os microservicos, pois a solucao foi pensada para a utilizacao de roteamento unicast.
+
+Para facilitar e melhorar a produtividade no back-end foi utilizado o spring framework e no front-end o NextJS.
+A documentaçao da API do servico de monitoramento foi feita atraves do swagger.
+
+
+## Justificativas da composição do projeto
+
 ## Frontend (pasta agro-drone)
 
 Para iniciar o projeto são necessários alguns passos:
@@ -46,3 +62,5 @@ Para iniciar o projeto são necessários alguns passos:
   
 ### Documentação
   As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger(http://localhost:8080/localiza-drone/swagger-ui.html) configurado no projeto.
+  
+## Backend (pasta localiza-drone)
