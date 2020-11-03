@@ -10,6 +10,8 @@ public class SmtpConfig {
     private String host;
     private String port;
     private String starttlsEnable;
+    private String emailDestination;
+    private String attachPath;
 
     public String getAuth() {
         return auth;
@@ -41,5 +43,21 @@ public class SmtpConfig {
 
     public void setStarttlsEnable(String starttlsEnable) {
         this.starttlsEnable = starttlsEnable;
+    }
+
+    public String getEmailDestination() {
+        return emailDestination;
+    }
+
+    public void setEmailDestination(String emailDestination) {
+        this.emailDestination = emailDestination;
+    }
+
+    public String getAttachPath() {
+        return attachPath;
+    }
+
+    public void setAttachPath(String attachPath) {
+        this.attachPath = attachPath;
     }
 }
