@@ -64,7 +64,7 @@ Caso haja a necessidade o e-mail é enviado através do Gmail.
 
 A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **SendEmailApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento das propriedades no arquivo **application.yaml** neste arquivo temos diversas informações de credenciais e configurações do sistema, sendo elas (as principais):
 
-credentials.email : conta de e-mail do Gmail.
+credentials.email : conta de e-mail do Gmail.<br/>
 credentials.password: Senha de acesso do e-mail.
 mail.smtp.emailDestination: E-mail de destino do alerta no caso do usuário não preencher um e-mail no front-end;
 mail.smtp.attachPath: Caminho do arquivo temporário que será criado com o mapa usado como anexo no e-mail. Ex: /var/tmp/test.png
