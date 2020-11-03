@@ -62,19 +62,19 @@ Caso haja a necessidade o e-mail é enviado através do Gmail.
 
 ### Inicialização
 
-A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **SendEmailApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento das propriedades no arquivo **application.yaml** neste arquivo temos diversas informações de credenciais e configurações do sistema, sendo elas (as principais):
+A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **SendEmailApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento das propriedades no arquivo **application.yaml** neste arquivo temos diversas informações de credenciais e configurações do sistema, sendo elas (as principais):<br/>
 
 credentials.email : conta de e-mail do Gmail.<br/>
-credentials.password: Senha de acesso do e-mail.
-mail.smtp.emailDestination: E-mail de destino do alerta no caso do usuário não preencher um e-mail no front-end;
-mail.smtp.attachPath: Caminho do arquivo temporário que será criado com o mapa usado como anexo no e-mail. Ex: /var/tmp/test.png
-api.googlemaps: Key gerada para acesso a API do Google Maps;
-rabbitmq.username: Nome do usuário da conta do Rabbit MQ;
-rabbitmq.virtualhost: Nome do host da conta do Rabbit MQ;
-rabbitmq.password: Senha da conta do Rabbit MQ;
-rabbitmq.url: URL de acesso do Rabbit MQ. Ex: bunny.cloudamqp.com
-rabbitmq.queue: Fila do Rabbit MQ. Ex: drone.allinfo
-rabbitmq.exchange: Exchange do Rabbit MQ. Ex: exchange.drone
+credentials.password: Senha de acesso do e-mail.<br/>
+mail.smtp.emailDestination: E-mail de destino do alerta no caso do usuário não preencher um e-mail no front-end;<br/>
+mail.smtp.attachPath: Caminho do arquivo temporário que será criado com o mapa usado como anexo no e-mail. Ex: /var/tmp/test.png<br/>
+api.googlemaps: Key gerada para acesso a API do Google Maps;<br/>
+rabbitmq.username: Nome do usuário da conta do Rabbit MQ;<br/>
+rabbitmq.virtualhost: Nome do host da conta do Rabbit MQ;<br/>
+rabbitmq.password: Senha da conta do Rabbit MQ;<br/>
+rabbitmq.url: URL de acesso do Rabbit MQ. Ex: bunny.cloudamqp.com<br/>
+rabbitmq.queue: Fila do Rabbit MQ. Ex: drone.allinfo<br/>
+rabbitmq.exchange: Exchange do Rabbit MQ. Ex: exchange.drone<br/>
 
 Para habilitar o envio de e-mail no Gmail é necessário habilitar a autenticação de Aplicativos. Conforme o link abaixo:
 
