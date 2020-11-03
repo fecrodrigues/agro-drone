@@ -51,8 +51,33 @@ Para iniciar o projeto são necessários alguns passos:
 - A queue drone.allinfo será alimentada de 10 em 10 segundos;
 - A queue drone.locationInfo será alimentada somente se o botão de ativar rastreamento for ativado sendo o intervalo de 10 em 10 segundos;
 
+## Backend Microservico A (pasta microservico-A)
 
-## Backend (pasta localiza-drone)
+O **microservico-a** é um microserviço responsável pelo envio de e-mail com os alertas dos drones de acordo com as métricas definidas pelo porfessor, sendo elas:
+
+- Enviar um e-mail se em 1 minuto a temperatura do drone registrada for: (Temperatura >= 35 ou <= 0) OU (Umidade do ar <= 15%).
+
+Este microservico visualiza a fila drone.allinfo do RabbitMQ e verifica se é necessário enviar um alerta por e-mail.
+Caso haja a necessidade o e-mail é enviado através do Gmail.
+
+### Inicialização
+
+A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **SendEmailApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento das propriedades no arquivo **application.yaml** neste arquivo temos diversas informações de credenciais e configurações do sistema, sendo elas (as principais):
+
+credentials.email : conta de e-mail do Gmail.
+credentials.password: Senha de acesso do e-mail.
+mail.smtp.emailDestination:
+mail.smtp.attachPath:
+api.googlemaps:
+rabbitmq.username:
+rabbitmq.virtualhost
+rabbitmq.password:
+rabbitmq.url:
+rabbitmq.queue:
+rabbitmq.exchange:
+
+
+## Backend Microservico B (pasta localiza-drone)
 
    O **localiza-done** é um microsserviço responsável pela exibição da localização do drone de maneira visual no mapa. Através de um serviço node(agro-drone), quando a opção de ratreamento está ativada, ocorre o envio de mensagens para a fila  **drone.locationInfo** (RabbitMQ) que são consumidas permitindo a construção dinâmica do mapa.
    
@@ -62,5 +87,3 @@ Para iniciar o projeto são necessários alguns passos:
   
 ### Documentação
   As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger(http://localhost:8080/localiza-drone/swagger-ui.html) configurado no projeto.
-  
-## Backend (pasta localiza-drone)
