@@ -1,7 +1,7 @@
 server:
   port: 3001
 credentials:
-  email: 
+  email:
   password:
 mail:
   smtp:
@@ -9,12 +9,14 @@ mail:
     host: smtp.gmail.com
     port: 587
     starttlsEnable: true
+    emailDestination:
+    attachPath: /var/tmp/test.png
 api:
   googlemaps:
 rabbitmq:
   username:
   virtualhost:
-  password:
+  password: 
   url: bunny.cloudamqp.com
-  queue:
-  exchange:
+  queue: drone.allinfo
+  exchange: exchange.drone

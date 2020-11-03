@@ -2,11 +2,11 @@ package br.com.fiap.sendemail.entity;
 
 public class EmailContent {
     private String email;
-    private String droneID;
+    private String drone_id;
     private String latitude;
     private String longitude;
-    private Integer temperatura;
-    private Integer humidade;
+    private String temperatura;
+    private String umidade;
 
     public String getEmail() {
         return email;
@@ -16,12 +16,12 @@ public class EmailContent {
         this.email = email;
     }
 
-    public String getDroneID() {
-        return droneID;
+    public String getDrone_id() {
+        return drone_id;
     }
 
-    public void setDroneID(String droneID) {
-        this.droneID = droneID;
+    public void setDrone_id(String drone_id) {
+        this.drone_id = drone_id;
     }
 
     public String getLatitude() {
@@ -40,19 +40,24 @@ public class EmailContent {
         this.longitude = longitude;
     }
 
-    public Integer getTemperatura() {
+    public String getTemperatura() {
         return temperatura;
     }
 
-    public void setTemperatura(Integer temperatura) {
+    public void setTemperatura(String temperatura) {
         this.temperatura = temperatura;
     }
 
-    public Integer getHumidade() {
-        return humidade;
+    public String getUmidade() {
+        return umidade;
     }
 
-    public void setHumidade(Integer humidade) {
-        this.humidade = humidade;
+    public void setUmidade(String umidade) {
+        this.umidade = umidade;
+    }
+
+    public String toString() {
+        return "[" + email + "," + drone_id + "," + latitude + "," + longitude + ","
+                + temperatura + "," + umidade + "]";
     }
 }

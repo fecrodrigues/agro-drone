@@ -1,53 +1,142 @@
 package br.com.fiap.sendemail;
 
 import br.com.fiap.sendemail.entity.*;
+import br.com.fiap.sendemail.utils.RabbitConfiguration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 import static br.com.fiap.sendemail.utils.EmailBody.emailBody;
+import static br.com.fiap.sendemail.utils.EmailDestination.emailDestination;
 import static br.com.fiap.sendemail.utils.GoogleApiUrl.googleApiUrl;
 import static br.com.fiap.sendemail.utils.SaveMapsImage.saveImage;
 
-@RestController
+/*@RestController*/
+@Service
+@EnableScheduling
 public class EmailController {
     @Autowired
     private SmtpCredentials smtpCredentials;
     @Autowired
     private SmtpConfig smtpConfig;
     @Autowired
-    private GoogleMaps googleMaps;
+    public GoogleMaps googleMaps;
     @Autowired
-    private RabbitMq rabbitMq;
+    private static RabbitMq rabbitMq;
 
-    @PostMapping("/email")
-    public ResponseEntity createEmail(@RequestBody EmailContent newEmail) throws IOException, MessagingException {
-        try {
-            String googleUrl = googleApiUrl(newEmail.getLatitude(), newEmail.getLongitude(), googleMaps.getGooglemaps());
-            System.out.println(googleUrl);
-            saveImage(googleUrl, "/var/tmp/test.png");
-            sendmail(newEmail);
-            return new ResponseEntity("Email sent with success!", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity("Sorry, the email wasn`t sent.", HttpStatus.SERVICE_UNAVAILABLE);
-        }
+
+
+    /*    @PostMapping("/email")
+        public ResponseEntity createEmail(@RequestBody EmailContent newEmail) throws IOException, MessagingException {
+            try {
+                String googleUrl = googleApiUrl(newEmail.getLatitude(), newEmail.getLongitude(), googleMaps.getGooglemaps());
+                System.out.println(googleUrl);
+                saveImage(googleUrl, "/var/tmp/test.png");
+                sendmail(newEmail);
+                return new ResponseEntity("Email sent with success!", HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity("Sorry, the email wasn`t sent.", HttpStatus.SERVICE_UNAVAILABLE);
+            }
+        }*/
+    @Scheduled(fixedDelay = 60)
+    public void teste() {
+        RabbitTemplate template = new RabbitTemplate(RabbitConfiguration.getConnection());
+        ArrayList<EmailContent> droneData = new ArrayList();
+        int i;
+        for (i = 0; i < 6; i++ ) {
+
+            /*while (true) {*/
+                try {
+
+                    byte[] body = template.receive("drone.allinfo").getBody();
+
+                    EmailContent emailContent = new ObjectMapper().readValue(body, EmailContent.class);
+
+                    droneData.add(emailContent);
+                    /*System.out.println(droneData);*/
+                    for (EmailContent teste : droneData) System.out.println(teste);
+                    /*droneData.forEach(u -> System.out.println(u.getDrone_id()));*/
+                    System.out.println("fim");
+                    Thread.sleep(10000);
+
+                    if (i == 5) {
+                        EmailContent maxTemp = Collections.max(droneData, Comparator.comparing(s -> Integer.parseInt(s.getTemperatura())));
+                        System.out.println(maxTemp.getTemperatura());
+                        EmailContent minTemp = Collections.min(droneData, Comparator.comparing(s -> Integer.parseInt(s.getTemperatura())));
+                        System.out.println(minTemp.getTemperatura());
+                        EmailContent minUmidade = Collections.min(droneData, Comparator.comparing(s -> Integer.parseInt(s.getUmidade())));
+                        System.out.println(minUmidade.getUmidade());
+                        if (Integer.parseInt(String.valueOf(maxTemp.getTemperatura())) >= 35 )  {
+                            System.out.println("Temperatua Alta Registrada");
+                            String googleUrl = googleApiUrl(maxTemp.getLatitude(), maxTemp.getLongitude(), googleMaps.getGooglemaps());
+                            saveImage(googleUrl, smtpConfig.getAttachPath());
+                            sendmail(maxTemp, "Temperatua Alta Registrada");
+                            System.out.println("Email enviado");
+                        } else if (Integer.parseInt(String.valueOf(minTemp.getTemperatura())) <= 0) {
+                            System.out.println("Temperatura Baixa Registrada");
+                            String googleUrl = googleApiUrl(minTemp.getLatitude(), minTemp.getLongitude(), googleMaps.getGooglemaps());
+                            saveImage(googleUrl, smtpConfig.getAttachPath());
+                            sendmail(minTemp, "Temperatura Baixa Registrada");
+                            System.out.println("Email enviado");
+
+                        }else if (Integer.parseInt(String.valueOf(minUmidade.getUmidade())) <= 15) {
+                            System.out.println("Umidade Baixa Registrada");
+                            String googleUrl = googleApiUrl(minUmidade.getLatitude(), minUmidade.getLongitude(), googleMaps.getGooglemaps());
+                            saveImage(googleUrl, smtpConfig.getAttachPath());
+                            sendmail(minUmidade, "Umidade Baixa Registrada");
+                            System.out.println("Email enviado");
+                        } else {
+                            System.out.println("Sistema Normal");
+                        }
+                    } else {}
+
+
+
+
+                    /*System.out.println(new String(body) + "Message number" + i);
+                    System.out.println("Temperatura:" + emailContent.getTemperatura());
+                    if (Integer.parseInt(emailContent.getTemperatura()) >= 35 || Integer.parseInt(emailContent.getTemperatura()) <= 0 ) {
+                        System.out.println("Precisamos mandar um e-mail: Temperatura no range de alerta");
+                    } else if (Integer.parseInt(emailContent.getUmidade()) <= 15) {
+                        System.out.println("Precisamos mandar um e-mail: Umidade no range de alerta");
+                    } else {
+                        System.out.println("Sistema sob controle");
+                    }*/
+
+                    /*String googleUrl = googleApiUrl(emailContent.getLatitude(), emailContent.getLongitude(), googleMaps.getGooglemaps());
+                    System.out.println(googleUrl);
+                    saveImage(googleUrl, "/var/tmp/test.png");
+                    sendmail(emailContent);*/
+
+
+                } catch (NullPointerException | IOException | InterruptedException | MessagingException ex) {
+                    System.out.println("Fila vazia");
+
+                }
+            }
+
+
     }
 
-    private void sendmail(EmailContent newEmail) throws AddressException, MessagingException, IOException {
+    private void sendmail(EmailContent newEmail, String issue) throws AddressException, MessagingException, IOException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", smtpConfig.getAuth());
         props.put("mail.smtp.starttls.enable", smtpConfig.getStarttlsEnable());
         props.put("mail.smtp.host", smtpConfig.getHost());
         props.put("mail.smtp.port", smtpConfig.getPort());
+
+
+
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -57,22 +146,22 @@ public class EmailController {
         Message msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(smtpCredentials.getEmail(), false));
 
-
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(newEmail.getEmail()));
-        msg.setSubject("System Report Alert - Drone ID: " + newEmail.getDroneID());
+        String emailTo = emailDestination(newEmail.getEmail(),smtpConfig.getEmailDestination());
+        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
+        msg.setSubject("System Report Alert - Drone ID: " + newEmail.getDrone_id());
         msg.setContent("Drone Information...", "text/html");
         msg.setSentDate(new Date());
 
         MimeBodyPart messageBodyPart = new MimeBodyPart();
 
-        String body = emailBody(newEmail);
+        String body = emailBody(newEmail, issue);
         messageBodyPart.setContent(body, "text/html");
 
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
         MimeBodyPart attachPart = new MimeBodyPart();
 
-        attachPart.attachFile("/var/tmp/test.png");
+        attachPart.attachFile(smtpConfig.getAttachPath());
         multipart.addBodyPart(attachPart);
         msg.setContent(multipart);
         Transport.send(msg);

@@ -5,5 +5,5 @@ drone:
   lng: 0
 
 google:
-  key: AIzaSyBRFjFVJA63W85SD85Ij3bdY1mRLOB8DE0
+  key: 
   src: https://maps.googleapis.com/maps/api/js?key=%s&callback=initMap&libraries=&v=weekly
