@@ -45,4 +45,4 @@ Para iniciar o projeto são necessários alguns passos:
   O mapa possúi uma coordenada padrão para que seja renderizado pela primeira vez que é recuperada das propriedades **drone.lat** e **drone.lng**. Dessa forma, caso haja a necessidade de alteração das coordenadas de inicialização basta apenas alterar seus valores no arquivo **applications.properties** localizada a pasta resource do projeto.  
   
 ### Documentação
-  As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger() configurado no projeto.
+  As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger(http://localhost:8080/localiza-drone/swagger-ui.html) configurado no projeto.
