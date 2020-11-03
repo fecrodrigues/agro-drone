@@ -21,7 +21,6 @@ import static br.com.fiap.sendemail.utils.EmailDestination.emailDestination;
 import static br.com.fiap.sendemail.utils.GoogleApiUrl.googleApiUrl;
 import static br.com.fiap.sendemail.utils.SaveMapsImage.saveImage;
 
-/*@RestController*/
 @Service
 @EnableScheduling
 public class EmailController {
