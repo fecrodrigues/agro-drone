@@ -66,16 +66,23 @@ A inicialização é feita de maneira simplificada pelo uso do spring boot sendo
 
 credentials.email : conta de e-mail do Gmail.
 credentials.password: Senha de acesso do e-mail.
-mail.smtp.emailDestination:
-mail.smtp.attachPath:
-api.googlemaps:
-rabbitmq.username:
-rabbitmq.virtualhost
-rabbitmq.password:
-rabbitmq.url:
-rabbitmq.queue:
-rabbitmq.exchange:
+mail.smtp.emailDestination: E-mail de destino do alerta no caso do usuário não preencher um e-mail no front-end;
+mail.smtp.attachPath: Caminho do arquivo temporário que será criado com o mapa usado como anexo no e-mail. Ex: /var/tmp/test.png
+api.googlemaps: Key gerada para acesso a API do Google Maps;
+rabbitmq.username: Nome do usuário da conta do Rabbit MQ;
+rabbitmq.virtualhost: Nome do host da conta do Rabbit MQ;
+rabbitmq.password: Senha da conta do Rabbit MQ;
+rabbitmq.url: URL de acesso do Rabbit MQ. Ex: bunny.cloudamqp.com
+rabbitmq.queue: Fila do Rabbit MQ. Ex: drone.allinfo
+rabbitmq.exchange: Exchange do Rabbit MQ. Ex: exchange.drone
 
+Para habilitar o envio de e-mail no Gmail é necessário habilitar a autenticação de Aplicativos. Conforme o link abaixo:
+
+https://myaccount.google.com/signinoptions/two-step-verification/enroll-welcome
+
+Para criar a chave de API do Google Maps você pode seguir o link abaixo:
+
+https://developers.google.com/places/web-service/get-api-key
 
 ## Backend Microservico B (pasta localiza-drone)
 
