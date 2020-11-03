@@ -2,6 +2,22 @@
 
 Criado projeto simulando um drone enviando informações para duas filas SaaS (Criadas em https://www.cloudamqp.com/) com informações de latitude, longitude, umidade e temperatura.
 
+## Justificativas da composição do projeto
+
+As linguagens escolhidas para o desenvolvimento foram: Javascript React(front-end) & Java (back-end).
+Foram criadas as duas filas abaixo no Rabbit MQ:
+
+- drone.allinfo: fila alimentada pelo front-end para o consumo do microserviço A responsável pelo envio de alertas por e-mail;
+- drone.locationInfo: fila alimentada pelo front-end somente quando a opção de rastreamento está ativa e consumida pelo microserviço B responsável pelo rastreamento.
+
+Foi utilizada a estrategia direct exchange na fila Rabbit MQ para o envio das mensagens entre o front e os microservicos, pois a solucao foi pensada para a utilizacao de roteamento unicast.
+
+Para facilitar e melhorar a produtividade no back-end foi utilizado o spring framework e no front-end o NextJS.
+A documentaçao da API do servico de monitoramento foi feita atraves do swagger.
+
+
+## Justificativas da composição do projeto
+
 ## Frontend (pasta agro-drone)
 
 Para iniciar o projeto são necessários alguns passos:
@@ -35,8 +51,33 @@ Para iniciar o projeto são necessários alguns passos:
 - A queue drone.allinfo será alimentada de 10 em 10 segundos;
 - A queue drone.locationInfo será alimentada somente se o botão de ativar rastreamento for ativado sendo o intervalo de 10 em 10 segundos;
 
+## Backend Microservico A (pasta microservico-A)
 
-## Backend (pasta localiza-drone)
+O **microservico-a** é um microserviço responsável pelo envio de e-mail com os alertas dos drones de acordo com as métricas definidas pelo porfessor, sendo elas:
+
+- Enviar um e-mail se em 1 minuto a temperatura do drone registrada for: (Temperatura >= 35 ou <= 0) OU (Umidade do ar <= 15%).
+
+Este microservico visualiza a fila drone.allinfo do RabbitMQ e verifica se é necessário enviar um alerta por e-mail.
+Caso haja a necessidade o e-mail é enviado através do Gmail.
+
+### Inicialização
+
+A inicialização é feita de maneira simplificada pelo uso do spring boot sendo necessário apenas executar a classe **SendEmailApplication**. Contudo, para que ocorra o correto funcionamento do microsserviço é necessário o preenchimento das propriedades no arquivo **application.yaml** neste arquivo temos diversas informações de credenciais e configurações do sistema, sendo elas (as principais):
+
+credentials.email : conta de e-mail do Gmail.
+credentials.password: Senha de acesso do e-mail.
+mail.smtp.emailDestination:
+mail.smtp.attachPath:
+api.googlemaps:
+rabbitmq.username:
+rabbitmq.virtualhost
+rabbitmq.password:
+rabbitmq.url:
+rabbitmq.queue:
+rabbitmq.exchange:
+
+
+## Backend Microservico B (pasta localiza-drone)
 
    O **localiza-done** é um microsserviço responsável pela exibição da localização do drone de maneira visual no mapa. Através de um serviço node(agro-drone), quando a opção de ratreamento está ativada, ocorre o envio de mensagens para a fila  **drone.locationInfo** (RabbitMQ) que são consumidas permitindo a construção dinâmica do mapa.
    
@@ -45,4 +86,4 @@ Para iniciar o projeto são necessários alguns passos:
   O mapa possúi uma coordenada padrão para que seja renderizado pela primeira vez que é recuperada das propriedades **drone.lat** e **drone.lng**. Dessa forma, caso haja a necessidade de alteração das coordenadas de inicialização basta apenas alterar seus valores no arquivo **applications.properties** localizada a pasta resource do projeto.  
   
 ### Documentação
-  As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger() configurado no projeto.
+  As informações referentes as rotas e funcionalidades do microsserviço podem ser acessadas através do swagger(http://localhost:8080/localiza-drone/swagger-ui.html) configurado no projeto.
